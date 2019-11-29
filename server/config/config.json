@@ -1,0 +1,17 @@
+{
+  "development": {
+    "database": "debtcrusher-dev",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "database": "debtcrusher-dev",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "database": "debtcrusher-dev",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
