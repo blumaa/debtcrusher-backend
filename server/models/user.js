@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       donationPool: {
         type: Sequelize.INTEGER,
         defaultValue: 0
+      },
+      userImage: {
+        type: Sequelize.STRING
       }
     },
     {}

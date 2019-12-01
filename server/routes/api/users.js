@@ -6,6 +6,40 @@ require("../../config/passport")(passport);
 const User = require("../../models").User;
 const Project = require("../../models").Project;
 const ProjectBacker = require("../../models/").ProjectBacker;
+var formidable = require("formidable");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // reject file
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/gif"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 8
+  },
+  fileFilter: fileFilter
+});
+
 
 router.get("/", async (req, res, next) => {
   try {
@@ -23,7 +57,12 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/signup", function(req, res) {
+router.post("/signup", upload.single("userImage"), (req, res) => {
+  console.log('**********************************************************')
+  console.log(req)
+  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+  console.log(req.file);
+  console.log('**********************************************************')
   console.log(req.body);
   if (!req.body.username || !req.body.password) {
     res.status(400).send({ msg: "Please pass username and password." });
@@ -34,6 +73,7 @@ router.post("/signup", function(req, res) {
       bio: req.body.bio,
       displayName: req.body.displayName,
       birthDate: req.body.birthDate,
+      userImage: req.file.path,
       include: [
         { model: Project, as: "project" },
         { model: ProjectBacker, as: "backing" }
@@ -54,7 +94,8 @@ router.post("/signup", function(req, res) {
           birthDate,
           donationPool,
           project,
-          backing
+          backing,
+          userImage
         } = user;
         res.json({
           success: true,
@@ -67,7 +108,8 @@ router.post("/signup", function(req, res) {
             birthDate,
             donationPool,
             project,
-            backing
+            backing,
+            userImage
           }
         });
         res.status(201).send(user);
@@ -117,7 +159,8 @@ router.post("/login", function(req, res) {
             birthDate,
             donationPool,
             project,
-            backing
+            backing,
+            userImage
           } = user;
           res.json({
             success: true,
@@ -130,7 +173,8 @@ router.post("/login", function(req, res) {
               birthDate,
               donationPool,
               project,
-              backing
+              backing,
+              userImage
             }
           });
         } else {
@@ -187,10 +231,9 @@ router.patch("/:id", async (req, res, next) => {
       where: {
         id: req.body.id
       },
-      include: [
-        { model: Project, as: "project" }      ]
+      include: [{ model: Project, as: "project" }]
     });
-    user.update({donationPool: user.donationPool + req.body.donationPool})
+    user.update({ donationPool: user.donationPool + req.body.donationPool });
     res.json(user);
   } catch (err) {
     next(err);
@@ -203,12 +246,13 @@ router.patch("/:id/donationSubtract", async (req, res, next) => {
       where: {
         id: req.body.id
       },
-      include: [
-        { model: Project, as: "project" }      ]
+      include: [{ model: Project, as: "project" }]
     });
-    user.update({donationPool: user.donationPool - req.body.amount})
-    console.log('_____________________________________________________________________')
-    console.log(user)
+    user.update({ donationPool: user.donationPool - req.body.amount });
+    console.log(
+      "_____________________________________________________________________"
+    );
+    console.log(user);
     res.json(user);
   } catch (err) {
     next(err);

@@ -27,6 +27,9 @@ module.exports = {
       donationPool: {
         type: Sequelize.INTEGER
       },
+      userImage: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
