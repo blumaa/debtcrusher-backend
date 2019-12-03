@@ -36,6 +36,7 @@ router.post("/", async (req, res, next) => {
         school: req.body.project.school,
         userId: req.body.project.userId
       });
+      console.log(newProject)
       res.json(newProject);
     }
   } catch (err) {
