@@ -274,10 +274,10 @@ router.patch("/:id/donationSubtract", async (req, res, next) => {
       include: [{ model: Project, as: "project" }]
     });
     user.update({ donationPool: user.donationPool - req.body.amount });
-    console.log(
-      "_____________________________________________________________________"
-    );
-    console.log(user);
+    // console.log(
+    //   "_____________________________________________________________________"
+    // );
+    // console.log(user);
     res.json(user);
   } catch (err) {
     next(err);
