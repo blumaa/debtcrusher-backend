@@ -10,7 +10,8 @@
     "dialect": "postgres"
   },
   "production": {
-    "database": "debtcrusher-dev",
+    "use_env_variable": "DATABASE_URL",
+    "database": "DATABASE_URL",
     "host": "localhost",
     "dialect": "postgres"
   }
