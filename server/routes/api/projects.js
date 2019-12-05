@@ -17,7 +17,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  console.log("hello");
+  // console.log("hello");
   try {
     // if project exists for user, send error
     const projects = await Project.findAll({
@@ -29,15 +29,22 @@ router.post("/", async (req, res, next) => {
     if (projects.length > 0) {
       res.status(401).send({ success: false, msg: "Project already exists." });
     } else {
-      console.log("hitting projects", req.body);
       const newProject = await Project.create({
         name: req.body.project.name,
         goal: req.body.project.goal,
         school: req.body.project.school,
-        userId: req.body.project.userId
+        userId: req.body.project.userId,
+        include: [{ model: ProjectBacker, as: "projectBackers" }, { model: User }, { model: SecondaryBacker, as: "secondaryBackers" }]
       });
-      console.log(newProject)
-      res.json(newProject);
+      const findProj = await Project.findOne({
+        where: {
+          userId: req.body.project.userId
+        },
+        include: [{ model: ProjectBacker, as: "projectBackers" }, { model: User }, { model: SecondaryBacker, as: "secondaryBackers" }]
+      })
+      // console.log('(((((((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))))')
+      // console.log(findProj)
+      res.json(findProj);
     }
   } catch (err) {
     console.log(err);
@@ -54,9 +61,15 @@ router.patch("/:id", async (req, res, next) => {
       include: [{ model: ProjectBacker, as: "projectBackers" }, { model: User }, { model: SecondaryBacker, as: "secondaryBackers" }]
     });
     currentProj.update({ goal: currentProj.goal - req.body.amount });
+    if (currentProj.goal <= 0) {
+      currentProj.update({funded:true, goal: 0})
+      console.log(currentProj)
+      res.json(currentProj);
+    } else {
+      res.json(currentProj)
+    }
     // console.log('___________________________________________________________________')
     // console.log(currentProj)
-    res.json(currentProj);
   } catch (err) {
     next(err);
   }

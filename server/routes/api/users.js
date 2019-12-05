@@ -40,7 +40,6 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-
 router.get("/", async (req, res, next) => {
   try {
     const users = await User.findAll({
@@ -49,21 +48,46 @@ router.get("/", async (req, res, next) => {
         { model: ProjectBacker, as: "backing" }
       ]
     });
-    console.log("****************************************");
-    console.log(users);
+    // console.log("****************************************");
+    // console.log(users);
     res.json(users);
   } catch (err) {
     next(err);
   }
 });
 
+// Edit User
+
+router.patch("/:id", upload.single("userImage"), (req, res, next) => {
+  // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+  // console.log(req.file)
+  // console.log(req.params.id)
+  try {
+    const newUser = User.findOne({
+      where: {
+        id: req.params.id
+      },
+      include: [
+        { model: Project, as: "project" },
+        { model: ProjectBacker, as: "backing" }
+      ]
+    }).then(user=> {
+      user.update({
+        displayName: req.body.displayName,
+        bio: req.body.bio,
+        birthDate: req.body.birthDate,
+        userImage: req.file.path
+
+      });
+      // console.log(user)
+      res.json(user);
+    })
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/signup", upload.single("userImage"), (req, res) => {
-  console.log('**********************************************************')
-  console.log(req)
-  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-  console.log(req.file);
-  console.log('**********************************************************')
-  console.log(req.body);
   if (!req.body.username || !req.body.password) {
     res.status(400).send({ msg: "Please pass username and password." });
   } else {
@@ -97,6 +121,7 @@ router.post("/signup", upload.single("userImage"), (req, res) => {
           backing,
           userImage
         } = user;
+
         res.json({
           success: true,
           token: token,
@@ -225,7 +250,7 @@ getToken = function(headers) {
   }
 };
 
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:id/donationPool", async (req, res, next) => {
   try {
     const user = await User.findOne({
       where: {
