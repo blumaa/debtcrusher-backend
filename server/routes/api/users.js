@@ -159,7 +159,8 @@ router.post("/login", function(req, res) {
     .then(user => {
       if (!user) {
         return res.status(401).send({
-          message: "Authentication failed. User not found."
+          message: "Authentication failed. User not found.",
+          success: false
         });
       }
       user.comparePassword(req.body.password, (err, isMatch) => {

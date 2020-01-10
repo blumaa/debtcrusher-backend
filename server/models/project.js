@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     goal: DataTypes.INTEGER,
     school: DataTypes.STRING,
     perMonth: DataTypes.INTEGER,
+    stripe_user_id: DataTypes.STRING,
     funded: {
       type: Sequelize.BOOLEAN,
       defaultValue: false

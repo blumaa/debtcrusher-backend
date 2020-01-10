@@ -8,6 +8,7 @@ const usersRouter = require('./server/routes/api/users')
 const projectsRouter = require('./server/routes/api/projects');
 const projectBackersRouter = require('./server/routes/api/projectBackers');
 const secondaryBackersRouter = require('./server/routes/api/secondaryBackers');
+const stripe = require('./server/routes/api/stripe');
 
 
 // Set up the express app
@@ -28,10 +29,12 @@ app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/projectBackers', projectBackersRouter);
 app.use('/api/secondaryBackers', secondaryBackersRouter);
+app.use('/api/stripe', stripe);
 
 // Setup a default catch-all route that sends back a welcome message in JSON format.
 app.get('*', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of nothingness.',
 }));
+
 
 module.exports = app;

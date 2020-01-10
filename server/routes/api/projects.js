@@ -34,6 +34,7 @@ router.post("/", async (req, res, next) => {
         goal: req.body.project.goal,
         school: req.body.project.school,
         userId: req.body.project.userId,
+        stripe_user_id: req.body.project.stripeId,
         include: [{ model: ProjectBacker, as: "projectBackers" }, { model: User }, { model: SecondaryBacker, as: "secondaryBackers" }]
       });
       const findProj = await Project.findOne({

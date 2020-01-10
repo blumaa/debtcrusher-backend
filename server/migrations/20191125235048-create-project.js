@@ -32,6 +32,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
+      stripe_user_id: {
+        type: Sequelize.STRING
+      },
       userId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
