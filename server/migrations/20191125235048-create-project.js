@@ -15,7 +15,13 @@ module.exports = {
       goal: {
         type: Sequelize.INTEGER
       },
+      current_goal: {
+        type: Sequelize.INTEGER
+      },
       school: {
+        type: Sequelize.STRING
+      },
+      video_url: {
         type: Sequelize.STRING
       },
       perMonth: {
@@ -34,6 +40,9 @@ module.exports = {
       },
       stripe_user_id: {
         type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.STRING(1000)
       },
       userId: {
         type: Sequelize.INTEGER,
